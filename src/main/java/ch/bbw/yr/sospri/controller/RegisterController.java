@@ -1,4 +1,4 @@
-package ch.bbw.yr.sospri;
+package ch.bbw.yr.sospri.controller;
 
 import ch.bbw.yr.sospri.member.Member;
 import ch.bbw.yr.sospri.message.Message;

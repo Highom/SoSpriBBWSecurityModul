@@ -16,8 +16,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     public void globalSecurityConfiguration(AuthenticationManagerBuilder auth) throws Exception {
-        auth.inMemoryAuthentication().withUser("user").password("{noop}password").roles("USER");
-        auth.inMemoryAuthentication().withUser("admin").password("{noop}password").roles("USER", "ADMIN");
+        auth.inMemoryAuthentication().withUser("user").password("{noop}password").roles("user");
+        auth.inMemoryAuthentication().withUser("admin").password("{noop}password").roles("user", "admin");
     }
 
     protected void configure(HttpSecurity http) throws Exception {
@@ -25,10 +25,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 "If subclassed this will potentially override subclass configure(HttpSecurity).");
 
         http.authorizeRequests()
-                .antMatchers("/noSecurity").permitAll()
+                .antMatchers("/get-members").hasRole("admin")
                 .anyRequest().authenticated()
-                .and().formLogin()
-                .and().httpBasic();
+                .and().formLogin().loginPage("/login").permitAll()
+                .and().logout().permitAll()
+                .and().httpBasic()
+                .and().exceptionHandling().accessDeniedPage("/403.html");
     }
 
 }
