@@ -3,6 +3,7 @@ package ch.bbw.yr.sospri.controller;
 import ch.bbw.yr.sospri.member.Member;
 import ch.bbw.yr.sospri.message.Message;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -13,6 +14,7 @@ import ch.bbw.yr.sospri.member.MemberService;
 import ch.bbw.yr.sospri.member.RegisterMember;
 
 import javax.validation.Valid;
+import java.security.SecureRandom;
 
 /**
  * RegisterController
@@ -57,11 +59,13 @@ public class RegisterController {
 			return "register";
 		}
 
+		BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder(10,new SecureRandom());
+
 		Member member = new Member();
 		member.setPrename(registerMember.getPrename());
 		member.setLastname(registerMember.getLastname());
 		member.setUsername(username);
-		member.setPassword(registerMember.getPassword());
+		member.setPassword(bCryptPasswordEncoder.encode(registerMember.getPassword()));
 		member.setAuthority("member");
 
 		memberservice.add(member);

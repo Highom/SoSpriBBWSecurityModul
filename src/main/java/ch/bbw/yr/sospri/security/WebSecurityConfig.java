@@ -3,21 +3,49 @@ package ch.bbw.yr.sospri.security;
  * @Author: Yannick Ruck
  * @Date: 28/05/2021
  */
+import ch.bbw.yr.sospri.member.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    public void globalSecurityConfiguration(AuthenticationManagerBuilder auth) throws Exception {
-        auth.inMemoryAuthentication().withUser("user").password("{noop}password").roles("user");
-        auth.inMemoryAuthentication().withUser("admin").password("{noop}password").roles("user", "admin");
+    MemberService memberService;
+
+//    @Autowired
+//    public void globalSecurityConfiguration(AuthenticationManagerBuilder auth) throws Exception {
+//        auth.inMemoryAuthentication().withUser("user").password("{noop}password").roles("user");
+//        auth.inMemoryAuthentication().withUser("admin").password("{noop}password").roles("user", "admin");
+//    }
+
+    @Bean
+    public DaoAuthenticationProvider daoAuthenticationProvider() {
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+        provider.setPasswordEncoder(passwordEncoder());
+        provider.setUserDetailsService(this.memberService);
+        return provider;
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) {
+        auth.authenticationProvider(daoAuthenticationProvider());
     }
 
     protected void configure(HttpSecurity http) throws Exception {
@@ -25,8 +53,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 "If subclassed this will potentially override subclass configure(HttpSecurity).");
 
         http.authorizeRequests()
-                .antMatchers("/get-members").hasRole("admin")
-                .antMatchers("/css/*", "/fragments/*", "/img/*", "/errors/*").permitAll()
+                .antMatchers("/get-members").hasAuthority("admin")
+                .antMatchers("/get-channel").hasAnyAuthority("admin", "supervisor", "member")
+                .antMatchers("/css/*", "/fragments/*", "/img/*", "/errors/*", "/get-register").permitAll()
                 .anyRequest().authenticated()
                 .and().formLogin().loginPage("/login").permitAll()
                 .and().logout().permitAll()
