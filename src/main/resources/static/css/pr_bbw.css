@@ -9,6 +9,10 @@ body , .table{
     color: var(--snow_color1);
 }
 
+.bg-dark {
+	background-color: var(--night_color2) !important;
+}
+
 .btn-primary {
 	color: var(--snow_color3);
 	background-color: var(--frost_color4);
