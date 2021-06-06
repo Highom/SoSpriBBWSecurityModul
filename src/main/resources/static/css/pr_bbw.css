@@ -1,14 +1,60 @@
-.pr_bg_green {
-  background: #90CC90;
+@import "node_modules/nord/src/nord.css";
+
+.row {
+margin-right: 0px
+}
+
+body , .table{
+    background-color: var(--night_color1);
+    color: var(--snow_color1);
+}
+
+.btn-primary {
+	color: var(--snow_color3);
+	background-color: var(--frost_color4);
+	border-color: var(--frost_color4);
+}
+
+.btn-success{
+    color: var(--snow_color3);
+    background-color: var(--aurora_color4);
+    border-color: var(--aurora_color4);
+}
+
+.btn-warning {
+	color: var(--night_color1);
+	background-color: var(--aurora_color3);
+	border-color: var(--aurora_color3);
+}
+
+.form-control, #username, #password {
+	background-color: var(--night_color2) !important;
+	color: var(--snow_color3) !important;
+}
+
+a {
+    color: var(--frost_color4)
+}
+
+a:hover {
+    color: var(--frost_color3)
+}
+
+.nav-pills .nav-link.active {
+    background-color: var(--frost_color4)
+}
+
+.pr_bg_blue {
+  background: var(--frost_color4);
 }
 
 .pr_border_solid {
   border-style: solid;
-  border-color: #00ff35;
+  border-color: var(--frost_color4);
 }
 
-.pr_text_green {
-  color: #40bd5a;
+.pr_text_blue {
+  color: var(--frost_color4);
 }
 
 .pr_center {
