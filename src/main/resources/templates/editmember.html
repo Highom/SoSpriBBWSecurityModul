@@ -51,7 +51,11 @@
                       <div class="col-md-6">
                         <div class="form-group">
                           <label for="form_authority">Authority *</label>
-                          <input id="form_authority" type="text" name="authority" class="form-control" placeholder="Please enter your authority *" required="required" data-error="Valid authority is required." th:field="*{authority}">
+                          <select  id="form_authority" th:field="*{authority}" name="authority" class="form-control">
+                            <option th:value="'member'" th:text="Member"></option>
+                            <option th:value="'admin'" th:text="Admin"></option>
+                            <option th:value="'supervisor'" th:text="Supervisor"></option>
+                          </select>
                           <div class="help-block with-errors"></div>
                         </div>
                       </div>
