@@ -7,6 +7,9 @@ import javax.validation.Valid;
 import ch.bbw.yr.sospri.member.Member;
 import ch.bbw.yr.sospri.message.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -49,9 +52,9 @@ public class ChannelsController {
 			model.addAttribute("messages", messageservice.getAll());
 			return "channel";
 		}
-		// Hack solange es kein authenticated member hat
-		Member tmpMember = memberservice.getById(4L);
-		message.setAuthor(tmpMember.getPrename() + " " + tmpMember.getLastname());
+
+		User user = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		message.setAuthor(user.getUsername());
 		message.setOrigin(new Date());
 		System.out.println("message: " + message);
 		messageservice.add(message);
