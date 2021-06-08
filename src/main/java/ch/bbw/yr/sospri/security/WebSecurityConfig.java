@@ -12,6 +12,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -22,12 +23,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     MemberService memberService;
-
-//    @Autowired
-//    public void globalSecurityConfiguration(AuthenticationManagerBuilder auth) throws Exception {
-//        auth.inMemoryAuthentication().withUser("user").password("{noop}password").roles("user");
-//        auth.inMemoryAuthentication().withUser("admin").password("{noop}password").roles("user", "admin");
-//    }
 
     @Bean
     public DaoAuthenticationProvider daoAuthenticationProvider() {
@@ -60,7 +55,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and().formLogin().loginPage("/login").permitAll()
                 .and().logout().permitAll()
                 .and().httpBasic()
-                .and().exceptionHandling().accessDeniedPage("/403.html");
+                .and().exceptionHandling().accessDeniedPage("/403.html")
+                .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.ALWAYS).invalidSessionUrl("/login");
     }
 
 }
