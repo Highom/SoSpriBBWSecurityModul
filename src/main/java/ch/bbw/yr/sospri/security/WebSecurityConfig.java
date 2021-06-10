@@ -50,6 +50,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.authorizeRequests()
                 .antMatchers("/get-members").hasAuthority("admin")
+                .antMatchers("/h2-console/**").permitAll()
                 .antMatchers("/get-channel").hasAnyAuthority("admin", "supervisor", "member")
                 .antMatchers("/css/*", "/fragments/*", "/img/*", "/errors/*", "/get-register").permitAll()
                 .anyRequest().authenticated()
@@ -58,6 +59,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and().httpBasic()
                 .and().exceptionHandling().accessDeniedPage("/403.html")
                 .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.ALWAYS).invalidSessionUrl("/login");
+
+        http.csrf().ignoringAntMatchers("/h2-console/**")
+                .and().headers().frameOptions().sameOrigin();
     }
 
 }
