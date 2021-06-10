@@ -4,6 +4,7 @@ import ch.bbw.yr.sospri.member.Member;
 import ch.bbw.yr.sospri.message.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.Pbkdf2PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -25,6 +26,12 @@ import java.security.SecureRandom;
 public class RegisterController {
 	@Autowired
 	MemberService memberservice;
+
+	private static final String PEPPER = "IAmAnEpicPepper";
+
+	public static String  GetPep() {
+		return PEPPER;
+	}
 
 	Message message = new Message();
 
@@ -59,13 +66,13 @@ public class RegisterController {
 			return "register";
 		}
 
-		BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder(10,new SecureRandom());
+		Pbkdf2PasswordEncoder encoder = new Pbkdf2PasswordEncoder(PEPPER, 185000, 256);
 
 		Member member = new Member();
 		member.setPrename(registerMember.getPrename());
 		member.setLastname(registerMember.getLastname());
 		member.setUsername(username);
-		member.setPassword(bCryptPasswordEncoder.encode(registerMember.getPassword()));
+		member.setPassword(encoder.encode(registerMember.getPassword()));
 		member.setAuthority("member");
 
 		memberservice.add(member);

@@ -8,7 +8,8 @@ INSERT INTO message (id, content, author, origin) VALUES
 /* encrypted password for id 1..4 is 1234* */
 DELETE FROM member;
 INSERT INTO member (id, prename, lastname, password, username, authority) VALUES
-  (1, 'Albert', 'Einstein', '$2a$10$fdivNJC5meS7mOM.QVKqZeVDHtn46arLIIgik6xbUg2w3eACiazCC', 'albert.einstein', 'admin'),
-  (2, 'Mac',  'Afee', '$2a$10$Bf6.b0FT30EibG1s.BZmL.14vSyWrQzFNI6q4UXkNmvmkUd3trcfO', 'mac.afee', 'member'),
-  (3, 'Tony',  'Stark', '$2a$10$Y5WfhqTlN91E0j88FXVOduxHiwCnSSfgGCrcivzPhzhM889f02.u6', 'toni.stark', 'supervisor'),
-  (4, 'Wilhelm',  'Tell', '$2a$10$4VrJkrAmhq/sPVnBgZ6Gm.S7ctGTHmo.f9QS3jQ2.c8cf1uH4CSfK', 'wilhelm.tell', 'member');
+  (1, 'Albert', 'Einstein', '8722ed82de46a868353f23817eae292641123ed30080722eea7ad963df64227b00ef455799e4e5ad', 'albert.einstein', 'admin'),
+  (2, 'Mac',  'Afee', '8722ed82de46a868353f23817eae292641123ed30080722eea7ad963df64227b00ef455799e4e5ad', 'mac.afee', 'member'),
+  (3, 'Tony',  'Stark', '8722ed82de46a868353f23817eae292641123ed30080722eea7ad963df64227b00ef455799e4e5ad', 'toni.stark', 'supervisor'),
+  (4, 'Wilhelm',  'Tell', '8722ed82de46a868353f23817eae292641123ed30080722eea7ad963df64227b00ef455799e4e5ad', 'wilhelm.tell', 'member'),
+  (5, 'Yannick', 'Ruck', '8722ed82de46a868353f23817eae292641123ed30080722eea7ad963df64227b00ef455799e4e5ad', 'yannick.ruck', 'admin');

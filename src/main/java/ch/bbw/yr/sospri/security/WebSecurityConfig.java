@@ -3,6 +3,7 @@ package ch.bbw.yr.sospri.security;
  * @Author: Yannick Ruck
  * @Date: 28/05/2021
  */
+import ch.bbw.yr.sospri.controller.RegisterController;
 import ch.bbw.yr.sospri.member.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -16,6 +17,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.password.Pbkdf2PasswordEncoder;
 
 @Configuration
 @EnableWebSecurity
@@ -25,18 +27,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     MemberService memberService;
 
     @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new Pbkdf2PasswordEncoder(RegisterController.GetPep(), 185000, 256);
+    }
+
+    @Bean
     public DaoAuthenticationProvider daoAuthenticationProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setPasswordEncoder(passwordEncoder());
         provider.setUserDetailsService(this.memberService);
         return provider;
     }
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) {
