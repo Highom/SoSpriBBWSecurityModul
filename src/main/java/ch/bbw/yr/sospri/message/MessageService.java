@@ -29,4 +29,8 @@ public class MessageService {
 	public void deleteById(Long id) {
 		repository.deleteById(id);
 	}
+
+	public Iterable<Message> getByChatroom(String chatroom) {
+		return repository.findAllByChatroom(chatroom);
+	}
 }

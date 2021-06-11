@@ -4,18 +4,14 @@ import java.util.Date;
 
 import javax.validation.Valid;
 
-import ch.bbw.yr.sospri.member.Member;
 import ch.bbw.yr.sospri.message.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 import ch.bbw.yr.sospri.member.MemberService;
 import ch.bbw.yr.sospri.message.Message;
@@ -32,15 +28,21 @@ public class ChannelsController {
 	@Autowired
 	MemberService memberservice;
 
+	private String currentChatroom = "";
+
 	@GetMapping("/get-channel")
-	public String getRequestChannel(Model model) {
+	public String getRequestChannel(Model model, @RequestParam("chatroom") String chatroom) {
 		System.out.println("getRequestChannel");
-		model.addAttribute("messages", messageservice.getAll());
-		
+		model.addAttribute("messages", messageservice.getByChatroom(chatroom));
+
 		Message message = new Message();
-		message.setContent("Der zweite Pfeil trifft immer.");
+		message.setContent("Hello World!");
 		System.out.println("message: " + message);
 		model.addAttribute("message", message);
+		model.addAttribute("chatroom", chatroom);
+
+		currentChatroom = chatroom;
+
 		return "channel";
 	}
 
@@ -55,10 +57,11 @@ public class ChannelsController {
 
 		User user = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		message.setAuthor(user.getUsername());
+		message.setChatroom(currentChatroom);
 		message.setOrigin(new Date());
 		System.out.println("message: " + message);
 		messageservice.add(message);
 		
-		return "redirect:/get-channel";
+		return "redirect:/get-channel?chatroom=" + currentChatroom;
 	}
 }

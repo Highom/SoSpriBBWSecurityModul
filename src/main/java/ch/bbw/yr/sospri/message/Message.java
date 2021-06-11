@@ -38,6 +38,8 @@ public class Message {
 	@DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
 	private Date origin ;
 
+	private String chatroom;
+
 	public Long getId() {
 		return id;
 	}
@@ -70,8 +72,22 @@ public class Message {
 		this.origin = origin;
 	}
 
+	public String getChatroom() {
+		return chatroom;
+	}
+
+	public void setChatroom(String chatroom) {
+		this.chatroom = chatroom;
+	}
+
 	@Override
 	public String toString() {
-		return "Message [id=" + id + ", content=" + content + ", author=" + author + ", origin=" + origin + "]";
+		return "Message{" +
+				"id=" + id +
+				", content='" + content + '\'' +
+				", author='" + author + '\'' +
+				", origin=" + origin +
+				", chatroom='" + chatroom + '\'' +
+				'}';
 	}
 }
