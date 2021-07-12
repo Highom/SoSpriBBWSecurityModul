@@ -54,7 +54,7 @@ public class ChannelsController {
 	@PostMapping("/add-message")
 	public String postRequestChannel(Model model, @ModelAttribute @Valid Message message, BindingResult bindingResult) {
 		if(bindingResult.hasErrors()) {
-			System.out.println("postRequestChannel(): has Error(s): " + bindingResult.getErrorCount());
+			logger.error("postRequestChannel(): has Error(s): " + bindingResult.getErrorCount());
 			model.addAttribute("messages", messageservice.getAll());
 			return "channel";
 		}
