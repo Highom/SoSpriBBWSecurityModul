@@ -1,5 +1,8 @@
 package ch.bbw.yr.sospri.member;
 
+import ch.bbw.yr.sospri.controller.ChannelsController;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -18,23 +21,29 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 public class MemberService implements UserDetailsService {
+	private final Logger logger = LoggerFactory.getLogger(MemberService.class);
+
 	@Autowired
 	private MemberRepository repository;
 
 	public Iterable<Member> getAll(){
+		logger.info("returned all members");
 		return repository.findAll();
 	}
 
 	public void add(Member member) {
+		logger.info("User was saved: " + member);
 		repository.save(member);
 	}
 
 	public void update(Long id, Member member) {
+		logger.info("User with id " + id + " was updated to: " + member);
 		//save geht auch für update.
 		repository.save(member);
 	}
 
 	public void deleteById(Long id) {
+		logger.info("User with id " + id + " was deleted");
 		repository.deleteById(id);
 	}
 	
@@ -43,10 +52,12 @@ public class MemberService implements UserDetailsService {
 		
 		for(Member member: memberitr){
 			if (member.getId() == id) {
+				logger.info("returned User with id " + id);
 				return member;
 			}
 		}
-		System.out.println("MemberService:getById(), id does not exist in repository: " + id);
+
+		logger.info("id does not exist in repository: " + id);
 		return null;
 	}
 	
@@ -55,10 +66,11 @@ public class MemberService implements UserDetailsService {
 		
 		for(Member member: memberitr){
 			if (member.getUsername().equals(username)) {
+				logger.info("returned User with username " + username);
 				return member;
 			}
 		}
-		System.out.println("MemberService:getByUserName(), username does not exist in repository: " + username);
+		logger.info("username does not exist in repository: " + username);
 		return null;
 	}
 

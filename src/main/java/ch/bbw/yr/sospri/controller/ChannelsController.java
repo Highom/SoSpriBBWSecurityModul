@@ -5,6 +5,8 @@ import java.util.Date;
 import javax.validation.Valid;
 
 import ch.bbw.yr.sospri.message.MessageService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
@@ -23,6 +25,8 @@ import ch.bbw.yr.sospri.message.Message;
  */
 @Controller
 public class ChannelsController {
+	private final Logger logger = LoggerFactory.getLogger(ChannelsController.class);
+
 	@Autowired
     MessageService messageservice;
 	@Autowired
@@ -32,23 +36,23 @@ public class ChannelsController {
 
 	@GetMapping("/get-channel")
 	public String getRequestChannel(Model model, @RequestParam("chatroom") String chatroom) {
-		System.out.println("getRequestChannel");
 		model.addAttribute("messages", messageservice.getByChatroom(chatroom));
 
 		Message message = new Message();
 		message.setContent("Hello World!");
-		System.out.println("message: " + message);
 		model.addAttribute("message", message);
 		model.addAttribute("chatroom", chatroom);
 
 		currentChatroom = chatroom;
 
+
+		User user = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		logger.info("User "+ user.getUsername() + " called getRequestChannel() with chatroom " + chatroom);
 		return "channel";
 	}
 
 	@PostMapping("/add-message")
 	public String postRequestChannel(Model model, @ModelAttribute @Valid Message message, BindingResult bindingResult) {
-		System.out.println("postRequestChannel(): message: " + message.toString());
 		if(bindingResult.hasErrors()) {
 			System.out.println("postRequestChannel(): has Error(s): " + bindingResult.getErrorCount());
 			model.addAttribute("messages", messageservice.getAll());
@@ -56,12 +60,13 @@ public class ChannelsController {
 		}
 
 		User user = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
 		message.setAuthor(user.getUsername());
 		message.setChatroom(currentChatroom);
 		message.setOrigin(new Date());
-		System.out.println("message: " + message);
 		messageservice.add(message);
-		
+
+		logger.info("User "+ user.getUsername() + " called postRequestChannel() with message \"" + message.getContent() + "\" in chatroom " + currentChatroom);
 		return "redirect:/get-channel?chatroom=" + currentChatroom;
 	}
 }

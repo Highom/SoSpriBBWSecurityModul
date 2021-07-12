@@ -2,7 +2,11 @@ package ch.bbw.yr.sospri.controller;
 
 import ch.bbw.yr.sospri.member.Member;
 import ch.bbw.yr.sospri.message.Message;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.Pbkdf2PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -24,6 +28,8 @@ import java.security.SecureRandom;
  */
 @Controller
 public class RegisterController {
+	private final Logger logger = LoggerFactory.getLogger(RegisterController.class);
+
 	@Autowired
 	MemberService memberservice;
 
@@ -37,17 +43,17 @@ public class RegisterController {
 
 	@GetMapping("/get-register")
 	public String getRequestRegistMembers(Model model) {
-		System.out.println("getRequestRegistMembers");
+		logger.info("getRequestRegistMembers() got called");
 		model.addAttribute("registerMember", new RegisterMember());
 		return "register";
 	}
 	
 	@PostMapping("/get-register")
 	public String postRequestRegistMembers(@Valid RegisterMember registerMember, BindingResult result, Model model) {
-		System.out.println("postRequestRegistMembers: registerMember");
-		System.out.println(registerMember);
+		logger.info("postRequestRegistMembers() got called");
 
 		if (result.hasErrors()) {
+			logger.trace("Registration has errors " + result.getAllErrors());
 			return "register";
 		}
 
@@ -56,6 +62,7 @@ public class RegisterController {
 			String msg = "User " + username +" already exists. change the first or last name";
 			System.out.println(msg);
 			registerMember.setMessage(msg);
+			logger.info("Registration failed. Reason:" + msg);
 			return "register";
 		}
 
@@ -63,6 +70,7 @@ public class RegisterController {
 			String msg = "Passwords do not match!";
 			System.out.println(msg);
 			registerMember.setMessage(msg);
+			logger.info("Registration failed. Reason:" + msg);
 			return "register";
 		}
 
@@ -77,6 +85,7 @@ public class RegisterController {
 
 		memberservice.add(member);
 
+		logger.info("New User registered: " + member);
 		model.addAttribute("username",member.getUsername());
 		return "registerconfirmed";
 	}

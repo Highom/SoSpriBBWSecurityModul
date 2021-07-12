@@ -4,6 +4,8 @@
  */
 package ch.bbw.yr.sospri.member;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -11,14 +13,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class MemberToUserDetailsMapper {
+    private static final Logger logger = LoggerFactory.getLogger(MemberToUserDetailsMapper.class);
+
     public static UserDetails toUserDetails(Member member) {
         User user = null;
         if (member != null) {
-            System.out.println("MemberToUserDetailsMapper.toUserDetails(): member: " + member);
+            logger.info("member: " + member);
             java.util.Collection<MemberGrantedAuthority> authorities = new ArrayList<>();
             authorities.add(new MemberGrantedAuthority(member.getAuthority()));
-            System.out.println("MemberToUserDetailsMapper.toUserDetails (): autorities: ");
-            System.out.println("MemberToUserDetailsMapper.toUserDetails(): autorities: "
+            logger.info("autorities: "
                     + Arrays.toString(authorities.toArray()));
             user = new User (member.getPrename ()+ " " + member.getLastname()
                     , member.getPassword()
