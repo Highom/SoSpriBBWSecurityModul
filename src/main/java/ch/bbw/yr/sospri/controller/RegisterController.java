@@ -2,6 +2,7 @@ package ch.bbw.yr.sospri.controller;
 
 import ch.bbw.yr.sospri.member.Member;
 import ch.bbw.yr.sospri.message.Message;
+import ch.bbw.yr.sospri.security.ReCaptchaValidationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import ch.bbw.yr.sospri.member.MemberService;
 import ch.bbw.yr.sospri.member.RegisterMember;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.validation.Valid;
 import java.security.SecureRandom;
@@ -29,6 +31,9 @@ import java.security.SecureRandom;
 @Controller
 public class RegisterController {
 	private final Logger logger = LoggerFactory.getLogger(RegisterController.class);
+
+	@Autowired
+	private ReCaptchaValidationService validator;
 
 	@Autowired
 	MemberService memberservice;
@@ -49,44 +54,50 @@ public class RegisterController {
 	}
 	
 	@PostMapping("/get-register")
-	public String postRequestRegistMembers(@Valid RegisterMember registerMember, BindingResult result, Model model) {
+	public String postRequestRegistMembers(@Valid RegisterMember registerMember, BindingResult result, @RequestParam(name="g-recaptcha-response")
+			String captcha, Model model) {
 		logger.info("postRequestRegistMembers() got called");
 
-		if (result.hasErrors()) {
-			logger.trace("Registration has errors " + result.getAllErrors());
-			return "register";
-		}
+		if(validator.validateCaptcha(captcha)) {
+			if (result.hasErrors()) {
+				logger.trace("Registration has errors " + result.getAllErrors());
+				return "register";
+			}
 
-		String username = registerMember.getPrename().toLowerCase() + "." + registerMember.getLastname().toLowerCase();
-		if (memberservice.getByUserName(username) != null) {
-			String msg = "User " + username +" already exists. change the first or last name";
-			System.out.println(msg);
+			String username = registerMember.getPrename().toLowerCase() + "." + registerMember.getLastname().toLowerCase();
+			if (memberservice.getByUserName(username) != null) {
+				String msg = "User " + username + " already exists. change the first or last name";
+				registerMember.setMessage(msg);
+				logger.error("Registration failed. Reason: " + msg);
+				return "register";
+			}
+
+			if (!registerMember.getPassword().equals(registerMember.getConfirmation())) {
+				String msg = "Passwords do not match!";
+				registerMember.setMessage(msg);
+				logger.error("Registration failed. Reason: " + msg);
+				return "register";
+			}
+
+			Pbkdf2PasswordEncoder encoder = new Pbkdf2PasswordEncoder(PEPPER, 185000, 256);
+
+			Member member = new Member();
+			member.setPrename(registerMember.getPrename());
+			member.setLastname(registerMember.getLastname());
+			member.setUsername(username);
+			member.setPassword(encoder.encode(registerMember.getPassword()));
+			member.setAuthority("member");
+
+			memberservice.add(member);
+
+			logger.info("New User registered: " + member);
+			model.addAttribute("username", member.getUsername());
+			return "registerconfirmed";
+		}else{
+			String msg = "Captcha is not valid";
 			registerMember.setMessage(msg);
-			logger.info("Registration failed. Reason:" + msg);
-			return "register";
+			logger.error("Registration failed. Reason: " + msg);
 		}
-
-		if (!registerMember.getPassword().equals(registerMember.getConfirmation())) {
-			String msg = "Passwords do not match!";
-			System.out.println(msg);
-			registerMember.setMessage(msg);
-			logger.info("Registration failed. Reason:" + msg);
-			return "register";
-		}
-
-		Pbkdf2PasswordEncoder encoder = new Pbkdf2PasswordEncoder(PEPPER, 185000, 256);
-
-		Member member = new Member();
-		member.setPrename(registerMember.getPrename());
-		member.setLastname(registerMember.getLastname());
-		member.setUsername(username);
-		member.setPassword(encoder.encode(registerMember.getPassword()));
-		member.setAuthority("member");
-
-		memberservice.add(member);
-
-		logger.info("New User registered: " + member);
-		model.addAttribute("username",member.getUsername());
-		return "registerconfirmed";
+		return "register";
 	}
 }
