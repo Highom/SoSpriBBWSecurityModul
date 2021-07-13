@@ -1,9 +1,7 @@
 package ch.bbw.yr.sospri.controller;
 
-import java.util.Date;
-
-import javax.validation.Valid;
-
+import ch.bbw.yr.sospri.member.MemberService;
+import ch.bbw.yr.sospri.message.Message;
 import ch.bbw.yr.sospri.message.MessageService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,10 +11,13 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
-import ch.bbw.yr.sospri.member.MemberService;
-import ch.bbw.yr.sospri.message.Message;
+import javax.validation.Valid;
+import java.util.Date;
 
 /**
  * ChannelsController
