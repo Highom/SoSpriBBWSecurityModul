@@ -24,6 +24,7 @@ public class Member {
 	private String lastname;
 	private String password;
 	private String username;
+	private String email;
 	
 	private String authority;
 
@@ -76,10 +77,24 @@ public class Member {
 		this.authority = authority;
 	}
 
-	@Override
-	public String toString() {
-		return "Member [id=" + id + ", prename=" + prename + ", lastname=" + lastname + ", password=" + password
-				+ ", username=" + username + ", authority=" + authority + "]";
+	public String getEmail() {
+		return email;
 	}
 
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	@Override
+	public String toString() {
+		return "Member{" +
+				"id=" + id +
+				", prename='" + prename + '\'' +
+				", lastname='" + lastname + '\'' +
+				", password='" + password + '\'' +
+				", username='" + username + '\'' +
+				", email='" + email + '\'' +
+				", authority='" + authority + '\'' +
+				'}';
+	}
 }

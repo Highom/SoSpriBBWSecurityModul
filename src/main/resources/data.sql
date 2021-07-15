@@ -7,9 +7,9 @@ INSERT INTO message (id, content, author, origin, chatroom) VALUES
 
 /* encrypted password for id 1..4 is 1234* */
 DELETE FROM member;
-INSERT INTO member (id, prename, lastname, password, username, authority) VALUES
-  (1, 'Albert', 'Einstein', '8722ed82de46a868353f23817eae292641123ed30080722eea7ad963df64227b00ef455799e4e5ad', 'albert.einstein', 'admin'),
-  (2, 'Mac',  'Afee', '8722ed82de46a868353f23817eae292641123ed30080722eea7ad963df64227b00ef455799e4e5ad', 'mac.afee', 'member'),
-  (3, 'Tony',  'Stark', '8722ed82de46a868353f23817eae292641123ed30080722eea7ad963df64227b00ef455799e4e5ad', 'toni.stark', 'supervisor'),
-  (4, 'Wilhelm',  'Tell', '8722ed82de46a868353f23817eae292641123ed30080722eea7ad963df64227b00ef455799e4e5ad', 'wilhelm.tell', 'member'),
-  (5, 'Yannick', 'Ruck', '8722ed82de46a868353f23817eae292641123ed30080722eea7ad963df64227b00ef455799e4e5ad', 'yannick.ruck', 'admin');
+INSERT INTO member (id, prename, lastname, password, username, authority, email) VALUES
+  (1, 'Albert', 'Einstein', '8722ed82de46a868353f23817eae292641123ed30080722eea7ad963df64227b00ef455799e4e5ad', 'albert.einstein', 'admin','test@test.ch'),
+  (2, 'Mac',  'Afee', '8722ed82de46a868353f23817eae292641123ed30080722eea7ad963df64227b00ef455799e4e5ad', 'mac.afee', 'member','test@test.ch'),
+  (3, 'Tony',  'Stark', '8722ed82de46a868353f23817eae292641123ed30080722eea7ad963df64227b00ef455799e4e5ad', 'toni.stark', 'supervisor','test@test.ch'),
+  (4, 'Wilhelm',  'Tell', '8722ed82de46a868353f23817eae292641123ed30080722eea7ad963df64227b00ef455799e4e5ad', 'wilhelm.tell', 'member','test@test.ch'),
+  (5, 'Yannick', 'Ruck', '8722ed82de46a868353f23817eae292641123ed30080722eea7ad963df64227b00ef455799e4e5ad', 'yannick.ruck', 'admin','test@test.ch');

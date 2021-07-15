@@ -74,6 +74,32 @@ public class MemberService implements UserDetailsService {
 		return null;
 	}
 
+	public Member getByEmail(String email) {
+		Iterable<Member> memberitr = repository.findAll();
+
+		for(Member member: memberitr){
+			if (member.getEmail().equals(email)) {
+				logger.info("returned User with email " + email);
+				return member;
+			}
+		}
+		logger.info("email does not exist in repository: " + email);
+		return null;
+	}
+
+	public Boolean existsByEmail(String email) {
+		Iterable<Member> memberitr = repository.findAll();
+
+		for(Member member: memberitr){
+			if (member.getEmail().equals(email)) {
+				logger.info("User with email exists " + email);
+				return true;
+			}
+		}
+		logger.info("email does not exist in repository: " + email);
+		return false;
+	}
+
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		Member member = getByUserName(username);

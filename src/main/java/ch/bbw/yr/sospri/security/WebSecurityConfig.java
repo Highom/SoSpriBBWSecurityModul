@@ -60,7 +60,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .regexMatchers("\\/get-channel\\?chatroom\\=topsecret").hasAuthority("admin")
                 .anyRequest().authenticated()
                 .and().formLogin().loginPage("/login").permitAll()
-                .and().oauth2Login().loginPage("/login").permitAll()
+                .and().oauth2Login().loginPage("/login").permitAll().defaultSuccessUrl("/loginSuccess")
                 .and().logout().permitAll()
                 .and().httpBasic()
                 .and().exceptionHandling().accessDeniedPage("/403.html")
